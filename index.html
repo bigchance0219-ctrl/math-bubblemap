@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>초등 수학 교육과정 통합 버블맵 PRO</title>
+<style>html,body{margin:0;height:100%;font-family:system-ui,sans-serif;background:#f4f7fb}#loading{height:100%;display:grid;place-items:center;color:#475467;font-weight:700}</style>
+</head>
+<body>
+<div id="loading">초등 수학 교육과정 버블맵을 불러오는 중입니다…</div>
+<script>
+(async()=>{
+ try{
+  const urls=['data/part1.txt','data/part2.txt','data/part3.txt','data/part4.txt','data/part5.txt'];
+  const parts=await Promise.all(urls.map(async u=>{const r=await fetch(u,{cache:'no-store'});if(!r.ok)throw new Error(u+' 불러오기 실패');return r.text();}));
+  const b64=parts.join('').replace(/\s+/g,'');
+  const bytes=Uint8Array.from(atob(b64),c=>c.charCodeAt(0));
+  const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+  const html=await new Response(stream).text();
+  document.open();document.write(html);document.close();
+ }catch(e){document.body.innerHTML='<pre style="white-space:pre-wrap;padding:20px;font-family:sans-serif">불러오기 오류: '+String(e)+'</pre>';}
+})();
+</script>
+</body>
+</html>
