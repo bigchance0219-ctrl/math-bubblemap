@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>수학×SIDE 버블맵</title>
+<style>
+html,body{margin:0;height:100%;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;background:#f4f7fb;color:#334155}
+#loading{height:100%;display:grid;place-items:center;text-align:center;padding:24px;box-sizing:border-box}
+.card{background:white;border:1px solid #e2e8f0;border-radius:18px;padding:22px 26px;box-shadow:0 12px 34px rgba(15,23,42,.08);max-width:520px}
+.title{font-size:20px;font-weight:900;margin-bottom:8px}.sub{font-size:13px;color:#64748b;line-height:1.7}
+</style>
+</head>
+<body>
+<div id="loading"><div class="card"><div class="title">수학×SIDE 버블맵을 불러오는 중입니다…</div><div class="sub">잠시만 기다려 주세요.</div></div></div>
+<script>
+(async()=>{
+  try{
+    const files=['data.txt','data2.txt','data3.txt','data4.txt','data5.txt','data6.txt','data7.txt','data8.txt'];
+    const parts=[];
+    for(const file of files){
+      const res=await fetch(file,{cache:'no-store'});
+      if(!res.ok) throw new Error(file+' 불러오기 실패 ('+res.status+')');
+      parts.push((await res.text()).replace(/\s+/g,''));
+    }
+    const b64=parts.join('');
+    const bin=atob(b64);
+    const bytes=new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+    if(typeof DecompressionStream==='undefined') throw new Error('브라우저 압축 해제 기능을 지원하지 않습니다. Chrome 또는 Edge 최신 버전에서 열어 주세요.');
+    const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+    const html=await new Response(stream).text();
+    if(!html.includes('수학×SIDE 버블맵')) throw new Error('버블맵 데이터 확인에 실패했습니다.');
+    document.open();
+    document.write(html);
+    document.close();
+  }catch(err){
+    document.getElementById('loading').innerHTML='<div class="card"><div class="title">불러오기 오류</div><div class="sub">'+String(err).replace(/[<>&]/g,s=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[s]))+'<br><br>새로고침하거나 Chrome/Edge 최신 버전에서 다시 열어 주세요.</div></div>';
+  }
+})();
+</script>
+</body>
+</html>
