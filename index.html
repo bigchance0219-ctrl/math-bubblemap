@@ -28,15 +28,10 @@
   for(const a of chunks){gz.set(a,offset);offset+=a.length;}
   if(typeof DecompressionStream==='undefined') throw new Error('이 브라우저는 압축 해제를 지원하지 않습니다. Chrome 또는 Edge 최신 버전에서 열어 주세요.');
   const stream=new Blob([gz]).stream().pipeThrough(new DecompressionStream('gzip'));
-  let html=await new Response(stream).text();
+  const html=await new Response(stream).text();
   if(!html.includes('초등 수학 교육과정 통합 버블맵 PRO')) throw new Error('원본 PRO 데이터 확인에 실패했습니다.');
-
-  // 클릭 오류 수정: 라벨 클릭이 SVG 배경 클릭으로 통과해 전체 보기로 돌아가던 현상 방지
-  html=html.replace('t.style.pointerEvents="none";','t.style.pointerEvents="auto"; t.style.cursor="pointer";');
-  html=html.replace('g.addEventListener("click",e=>{e.stopPropagation(); focusNode(n.id);});','g.addEventListener("click",e=>{e.stopPropagation(); focusNode(n.id);});\n  t.addEventListener("click",e=>{e.stopPropagation(); focusNode(n.id);});');
-  html=html.replace('svg.addEventListener("click", reset);','svg.addEventListener("click", e=>{ if(e.target===svg) reset(); });');
-
-  document.open();document.write(html);document.close();
+  const upgraded=html.replace('</body>','<script src="v11.js?v=11"></'+'script></body>');
+  document.open();document.write(upgraded);document.close();
  }catch(e){
    document.body.innerHTML='<pre style="white-space:pre-wrap;padding:20px;font-family:sans-serif">불러오기 오류: '+String(e)+'\n\n새로고침 후에도 계속되면 Chrome/Edge에서 다시 열어 주세요.</pre>';
  }
