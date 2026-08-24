@@ -30,7 +30,7 @@
   const stream=new Blob([gz]).stream().pipeThrough(new DecompressionStream('gzip'));
   const html=await new Response(stream).text();
   if(!html.includes('초등 수학 교육과정 통합 버블맵 PRO')) throw new Error('원본 PRO 데이터 확인에 실패했습니다.');
-  const upgraded=html.replace('</body>','<script src="v11.js?v=11"></'+'script></body>');
+  const upgraded=html.replace('</body>','<script src="v11.js?v=11"></'+'script><script src="v12.js?v=12"></'+'script></body>');
   document.open();document.write(upgraded);document.close();
  }catch(e){
    document.body.innerHTML='<pre style="white-space:pre-wrap;padding:20px;font-family:sans-serif">불러오기 오류: '+String(e)+'\n\n새로고침 후에도 계속되면 Chrome/Edge에서 다시 열어 주세요.</pre>';
