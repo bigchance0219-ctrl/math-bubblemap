@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>실과교육과정 맵</title>
+<style>
+:root{--navy:#17324d;--teal:#167d7f;--mint:#eaf7f5;--ink:#203040;--muted:#71808e;--line:#dbe5ec;--bg:#f5f8fb}
+*{box-sizing:border-box}body{margin:0;font-family:Pretendard,"Noto Sans KR","Apple SD Gothic Neo",sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select,textarea{font:inherit}.wrap{max-width:1440px;margin:auto}header{background:linear-gradient(135deg,#15324d,#146d73);color:#fff;padding:28px 20px}
+.title{font-size:30px;font-weight:900}.sub{margin-top:6px;font-size:14px;opacity:.86}.app{padding:18px 20px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);padding:11px;border-radius:15px;position:sticky;top:8px;z-index:10}
+.search{flex:1;min-width:240px;border:1px solid var(--line);border-radius:10px;padding:10px}.btn,.tab{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 11px;cursor:pointer}
+.btn.primary,.tab.active{background:var(--navy);color:#fff;border-color:var(--navy)}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}
+.layout{display:grid;grid-template-columns:300px 1fr;gap:14px}.panel{background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px}.sidebar{align-self:start;position:sticky;top:78px}
+.domain-list{display:grid;gap:7px}.domain{border:1px solid var(--line);background:#fff;border-radius:11px;padding:10px;text-align:left;cursor:pointer}.domain.active{background:var(--mint);border-color:var(--teal)}.domain b{display:block;font-size:13px}.domain small{color:var(--muted)}
+.badge{display:inline-block;padding:3px 7px;border-radius:999px;font-size:10px;margin-right:4px}.official{background:#e8f1fb;color:#1d4f7a}.research{background:#f1eafe;color:#6330b4}.ai{background:#fff1d9;color:#915400}.status{background:#eef3f6;color:#526674}.status.ok{background:#e7f7ee;color:#176b42}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:13px}.stat{border:1px solid var(--line);border-radius:12px;padding:11px}.stat b{display:block;font-size:21px;color:var(--navy)}.stat span{font-size:11px;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:9px}.card{border:1px solid var(--line);border-radius:13px;padding:12px;cursor:pointer}.card:hover{border-color:#a8c0cf}.code{font-weight:900;color:var(--navy)}.std{font-size:13px;line-height:1.55;margin:7px 0}
+.tags{display:flex;gap:4px;flex-wrap:wrap}.tag{font-size:10px;background:#eef7f6;color:#176c6d;padding:3px 6px;border-radius:999px}.custom{background:#f3eefe;color:#6e36b7}.aitag{background:#fff3df;color:#8c5500}
+.value-cloud{display:flex;gap:5px;flex-wrap:wrap}.value-chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 8px;font-size:11px;cursor:pointer}.value-chip.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.info{background:#f8fbfd;border:1px solid var(--line);border-radius:12px;padding:11px;margin:10px 0;font-size:12px;line-height:1.55}.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:4px 0 10px}.section-head h3{margin:0}.hint{font-size:11px;color:var(--muted)}
+.analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.analysis-card{border:1px solid var(--line);border-radius:13px;padding:12px}.big{font-size:24px;font-weight:900;color:var(--navy);margin:5px 0}
+.bar{display:grid;grid-template-columns:160px 1fr 35px;gap:8px;align-items:center;margin:8px 0}.track{height:9px;background:#edf2f5;border-radius:999px;overflow:hidden}.fill{height:100%;background:var(--teal)}
+.net{width:100%;height:610px;border:1px solid var(--line);border-radius:13px;background:#fbfdff}.matrix{overflow:auto}table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#f7fafc}
+.drawer{position:fixed;right:16px;top:75px;width:min(500px,calc(100vw - 32px));height:calc(100vh - 90px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:17px;box-shadow:0 20px 60px rgba(20,42,58,.22);z-index:30;padding:17px;display:none}.drawer.open{display:block}
+.close{float:right;border:0;background:#eef2f5;border-radius:8px;padding:6px 9px;cursor:pointer}.block{border-top:1px solid var(--line);padding-top:11px;margin-top:11px}.checks{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}.check{font-size:11px;border:1px solid var(--line);border-radius:8px;padding:7px}.memo{width:100%;min-height:70px;border:1px solid var(--line);border-radius:9px;padding:8px}
+.empty{text-align:center;color:var(--muted);padding:35px}.footer{padding:0 20px 32px;color:var(--muted);font-size:11px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{position:static}.stats{grid-template-columns:repeat(2,1fr)}.analysis-grid{grid-template-columns:1fr}.toolbar{position:static}.bar{grid-template-columns:125px 1fr 32px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="title">실과교육과정 맵 <span style="font-size:13px;opacity:.75">V4</span></div><div class="sub">2022 개정 초등 실과교육과정 탐색 · 가치 관계 분석 · 생성형 AI 시대 재해석</div></div></header>
+<div class="wrap app">
+<div class="toolbar">
+<input id="search" class="search" placeholder="성취기준 코드·문장·가치 검색">
+<select id="valueFilter" class="btn"><option value="">모든 가치</option></select>
+<select id="reviewFilter" class="btn"><option value="">검토상태 전체</option><option>미검토</option><option>검토중</option><option>확정</option></select>
+<button id="reset" class="btn">초기화</button><button id="jsonBtn" class="btn">JSON 백업</button><button id="csvBtn" class="btn">CSV 내보내기</button>
+<label class="btn">JSON 불러오기<input id="importFile" type="file" accept=".json" style="display:none"></label>
+</div>
+<div class="tabs"><button class="tab active" data-tab="list">성취기준</button><button class="tab" data-tab="value">가치 분석</button><button class="tab" data-tab="network">가치 관계망</button><button class="tab" data-tab="coding">연구 코딩표</button></div>
+<div class="layout">
+<aside class="panel sidebar">
+<h3 style="margin-top:0">5개 내용 영역</h3><div id="domains" class="domain-list"></div>
+<div class="block"><h4>가치 필터</h4><div id="valueCloud" class="value-cloud"></div></div>
+<div class="info"><span class="badge official">공식</span> 교육과정 원문<br><span class="badge research">연구 코딩</span> 가치·근거·검토상태<br><span class="badge ai">AI 관련성</span> 연구자 해석</div>
+</aside>
+<main class="panel">
+<div id="stats" class="stats"></div>
+<section id="listView"><div class="section-head"><h3>성취기준 탐색</h3><span id="count" class="hint"></span></div><div id="cards" class="cards"></div></section>
+<section id="valueView" style="display:none"><div class="section-head"><h3>가치 분석 페이지</h3><span class="hint">가치 하나가 교육과정 전체에 어떻게 분포하는지 확인</span></div><select id="valueAnalysisSelect" class="btn"></select><div id="valueAnalysis" style="margin-top:12px"></div></section>
+<section id="networkView" style="display:none"><div class="section-head"><h3>실과교육 가치 관계망</h3><span class="hint">같은 성취기준에서 함께 나타나는 가치의 공출현 관계</span></div><svg id="network" class="net"></svg><div class="info"><b>주의:</b> 빈도나 연결 수는 교육적 중요도와 동일하지 않습니다.</div></section>
+<section id="codingView" style="display:none"><div class="section-head"><h3>연구 코딩표</h3><span class="hint">공식 문구와 연구자 코딩을 분리하여 관리</span></div><div class="matrix"><table><thead><tr><th>코드</th><th>영역</th><th>성취기준</th><th>가치</th><th>AI 관련성</th><th>검토</th><th>근거/메모</th></tr></thead><tbody id="codingBody"></tbody></table></div></section>
+</main>
+</div>
+</div>
+<div id="drawer" class="drawer"><button id="closeDrawer" class="close">닫기</button><div id="drawerContent"></div></div>
+<div class="wrap footer"><b>출처:</b> 교육부 고시 제2022-33호 [별책 10] 「실과(기술·가정)/정보과 교육과정」. 가치 태그와 AI 관련성은 연구를 위한 예비·연구자 코딩이며 공식 교육과정 문구와 구분됩니다.</div>
+<script src="./data.js"></script><script src="./app.js"></script>
+</body></html>
