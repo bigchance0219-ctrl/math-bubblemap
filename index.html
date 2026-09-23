@@ -3,37 +3,51 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer-when-downgrade">
 <title>초등 수학 교육과정 통합 버블맵 PRO</title>
-<style>html,body{margin:0;height:100%;font-family:system-ui,sans-serif;background:#f4f7fb}#loading{height:100%;display:grid;place-items:center;color:#475467;font-weight:700}</style>
+<style>
+html,body{margin:0;height:100%;font-family:system-ui,sans-serif;background:#f4f7fb}
+#loading{height:100%;display:grid;place-items:center;color:#475467;font-weight:700;text-align:center;padding:24px;box-sizing:border-box}
+#loading small{display:block;margin-top:8px;color:#98a2b3;font-weight:500}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/fflate@0.8.2/umd/index.js"></script>
 </head>
 <body>
-<div id="loading">초등 수학 교육과정 통합 버블맵 PRO를 불러오는 중입니다…</div>
+<div id="loading">초등 수학 교육과정 통합 버블맵 PRO를 불러오는 중입니다…<small>Padlet·카카오톡·모바일 브라우저에서도 열 수 있도록 호환 모드로 실행합니다.</small></div>
 <script>
 (async()=>{
  try{
   const urls=['data/part1.txt','data/part2.txt','data/part3.txt','data/part4.txt','data/part5.txt'];
-  const chunks=[];
-  for(const u of urls){
+  const parts=await Promise.all(urls.map(async u=>{
     const r=await fetch(u,{cache:'no-store'});
     if(!r.ok) throw new Error(u+' 불러오기 실패 ('+r.status+')');
-    const b64=(await r.text()).replace(/\s+/g,'');
+    return (await r.text()).replace(/\s+/g,'');
+  }));
+  const chunks=parts.map(b64=>{
     const bin=atob(b64);
     const bytes=new Uint8Array(bin.length);
     for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
-    chunks.push(bytes);
-  }
+    return bytes;
+  });
   const total=chunks.reduce((n,a)=>n+a.length,0);
   const gz=new Uint8Array(total);
   let offset=0;
   for(const a of chunks){gz.set(a,offset);offset+=a.length;}
-  if(typeof DecompressionStream==='undefined') throw new Error('이 브라우저는 압축 해제를 지원하지 않습니다. Chrome 또는 Edge 최신 버전에서 열어 주세요.');
-  const stream=new Blob([gz]).stream().pipeThrough(new DecompressionStream('gzip'));
-  const html=await new Response(stream).text();
+  let html='';
+  if(typeof DecompressionStream!=='undefined'){
+    const stream=new Blob([gz]).stream().pipeThrough(new DecompressionStream('gzip'));
+    html=await new Response(stream).text();
+  }else if(window.fflate && typeof window.fflate.gunzipSync==='function'){
+    html=new TextDecoder('utf-8').decode(window.fflate.gunzipSync(gz));
+  }else{
+    throw new Error('이 브라우저에서 압축 해제 기능을 사용할 수 없습니다.');
+  }
   if(!html.includes('초등 수학 교육과정 통합 버블맵 PRO')) throw new Error('원본 PRO 데이터 확인에 실패했습니다.');
   const upgraded=html.replace('</body>','<script src="v11.js?v=11"></'+'script><script src="v12.js?v=12"></'+'script><script src="v13.js?v=13"></'+'script><script src="v14.js?v=14"></'+'script><script src="v15.js?v=15"></'+'script><script src="v16.js?v=16"></'+'script><script src="v17.js?v=17"></'+'script><script src="v18.js?v=18"></'+'script><script src="v23.js?v=23"></'+'script></body>');
   document.open();document.write(upgraded);document.close();
  }catch(e){
-   document.body.innerHTML='<pre style="white-space:pre-wrap;padding:20px;font-family:sans-serif">불러오기 오류: '+String(e)+'\n\n새로고침 후에도 계속되면 Chrome/Edge에서 다시 열어 주세요.</pre>';
+   const msg=String(e);
+   document.body.innerHTML='<div style="max-width:720px;margin:60px auto;padding:24px;font-family:system-ui,sans-serif;color:#344054"><h2 style="margin:0 0 12px">사이트를 바로 열지 못했습니다.</h2><p style="line-height:1.7;color:#667085">Padlet 안쪽 미리보기에서 차단된 경우 아래 버튼으로 브라우저에서 바로 열 수 있습니다.</p><p><a href="'+location.href+'" target="_top" style="display:inline-block;background:#175cd3;color:#fff;text-decoration:none;padding:11px 16px;border-radius:10px;font-weight:800">브라우저에서 열기</a></p><details style="margin-top:18px;color:#98a2b3"><summary>오류 정보</summary><pre style="white-space:pre-wrap">'+msg.replace(/[&<>]/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[s]))+'</pre></details></div>';
  }
 })();
 </script>
