@@ -23,14 +23,58 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Build Padlet-compatible static site
+        shell: bash
+        run: |
+          set -e
+          mkdir -p _site
+          rsync -a --exclude='.git' --exclude='_site' ./ _site/
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64, gzip, re
+
+          root = Path('.')
+          out = Path('_site')
+          parts = []
+          for i in range(1, 6):
+              text = (root / 'data' / f'part{i}.txt').read_text(encoding='utf-8')
+              parts.append(re.sub(r'\s+', '', text))
+
+          packed = base64.b64decode(''.join(parts))
+          html = gzip.decompress(packed).decode('utf-8')
+
+          if '초등 수학 교육과정 통합 버블맵 PRO' not in html:
+              raise SystemExit('Canonical PRO HTML validation failed')
+
+          addons = ''.join([
+              '<script src="v11.js?v=11"></script>',
+              '<script src="v12.js?v=12"></script>',
+              '<script src="v13.js?v=13"></script>',
+              '<script src="v14.js?v=14"></script>',
+              '<script src="v15.js?v=15"></script>',
+              '<script src="v16.js?v=16"></script>',
+              '<script src="v17.js?v=17"></script>',
+              '<script src="v18.js?v=18"></script>',
+              '<script src="v23.js?v=23"></script>',
+          ])
+          if '</body>' not in html:
+              raise SystemExit('Canonical HTML has no body close tag')
+          html = html.replace('</body>', addons + '</body>', 1)
+          (out / 'index.html').write_text(html, encoding='utf-8')
+          print('Built static index.html:', (out / 'index.html').stat().st_size, 'bytes')
+          PY
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
         with:
           enablement: true
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
